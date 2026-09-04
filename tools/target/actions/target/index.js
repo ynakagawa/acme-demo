@@ -184,7 +184,11 @@ async function main(params) {
       data = await targetRequest('PUT', `/activities/${activityType}/${activityId}`, tenant, clientId, token, activity, version);
 
     } else if (resource === 'update-offer' && activityId && activityType && offerId) {
-      const activity = await targetRequest('GET', `/activities/${activityType}/${activityId}`, tenant, clientId, token);
+      // Activities with multiple experiences/options 400 on v1 ("Cannot access
+      // activity with options in this version of API") — v3 is required to
+      // read and write them, same as the activity-details fetch.
+      const version = params.version || 'v3';
+      const activity = await targetRequest('GET', `/activities/${activityType}/${activityId}`, tenant, clientId, token, undefined, version);
 
       if (activity.httpStatus >= 400) {
         return {
@@ -201,7 +205,7 @@ async function main(params) {
         });
       }
 
-      data = await targetRequest('PUT', `/activities/${activityType}/${activityId}`, tenant, clientId, token, activity);
+      data = await targetRequest('PUT', `/activities/${activityType}/${activityId}`, tenant, clientId, token, activity, version);
 
     } else {
       data = await targetRequest('GET', '/activities', tenant, clientId, token);

@@ -250,7 +250,7 @@ function showOffersModal(offers, activity) {
     errEl.textContent = '';
 
     try {
-      const url = `${RUNTIME_URL}?resource=update-offer&id=${activity.id}&type=${activity.type}&offerId=${selectedOffer.id}`;
+      const url = `${RUNTIME_URL}?resource=update-offer&id=${activity.id}&type=${activity.type}&offerId=${selectedOffer.id}&version=v3`;
       const resp = await fetch(url);
       const result = await resp.json();
 
